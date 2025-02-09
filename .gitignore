@@ -41,3 +41,6 @@ _start-cmd.bat
 
 # Wiki
 wiki
+
+# nix output
+result
