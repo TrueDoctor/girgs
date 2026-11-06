@@ -1,0 +1,11 @@
+{
+  "name": "girgs",
+  "version": "1.0.2",
+  "description": "Generator for Geometric Inhomogeneous Random Graphs (WebAssembly build)",
+  "type": "module",
+  "main": "girgs.mjs",
+  "types": "girgs.d.ts",
+  "files": ["girgs.mjs", "girgs.wasm", "girgs.d.ts", "LICENSE"],
+  "license": "MIT",
+  "repository": "github:chistopher/girgs"
+}

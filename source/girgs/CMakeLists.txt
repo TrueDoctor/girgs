@@ -4,7 +4,9 @@
 #
 
 # find_package(THIRDPARTY REQUIRED)
-find_package(OpenMP REQUIRED)
+if(NOT TARGET OpenMP::OpenMP_CXX)
+    find_package(OpenMP REQUIRED)
+endif()
 
 #
 # Library name and options

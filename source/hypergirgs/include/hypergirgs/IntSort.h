@@ -65,7 +65,7 @@ public:
         lsb_remaining_width{max_bits - msb_radix_width},
         no_iters{static_cast<int>(idiv_ceil(std::max<size_t>(1llu, lsb_remaining_width), RADIX_WIDTH))},
         adaptive_width{idiv_ceil(lsb_remaining_width, no_iters)},
-        adaptive_no_queues{1llu << adaptive_width},
+        adaptive_no_queues{size_t{1} << adaptive_width},
         mask{(Key(1) << adaptive_width) - 1}
     {
     }

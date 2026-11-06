@@ -12,6 +12,48 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
+        # JavaScript/WebAssembly module: girgs.mjs, girgs.wasm, girgs.d.ts and package.json
+        packages.wasm = pkgs.stdenv.mkDerivation {
+          pname = "girgs-wasm";
+          version = "1.0.2";
+
+          src = ./.;
+
+          nativeBuildInputs = with pkgs; [
+            cmake
+            ninja
+            emscripten
+            python3
+          ];
+
+          dontUseCmakeConfigure = true;
+
+          configurePhase = ''
+            runHook preConfigure
+            # emscripten needs a writable cache; seed it with the prebuilt sysroot
+            export EM_CACHE=$TMPDIR/emcache
+            cp -r ${pkgs.emscripten}/share/emscripten/cache $EM_CACHE
+            chmod -R u+w $EM_CACHE
+            emcmake cmake -S . -B build -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DOPTION_BUILD_CLI=OFF
+            runHook postConfigure
+          '';
+
+          buildPhase = ''
+            runHook preBuild
+            cmake --build build
+            runHook postBuild
+          '';
+
+          installPhase = ''
+            runHook preInstall
+            mkdir -p $out
+            cp build/girgs.mjs build/girgs.wasm source/wasm/girgs.d.ts source/wasm/package.json LICENSE $out/
+            runHook postInstall
+          '';
+        };
+
         packages.default = pkgs.stdenv.mkDerivation {
           pname = "girgs";
           version = "1.0.2";

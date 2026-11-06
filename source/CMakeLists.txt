@@ -24,6 +24,12 @@ add_subdirectory(examples)
 set(IDE_FOLDER "CLI")
 add_subdirectory(cli)
 
+# JavaScript/WebAssembly bindings
+if(OPTION_BUILD_WASM)
+    set(IDE_FOLDER "Wasm")
+    add_subdirectory(wasm)
+endif()
+
 # Tests
 if(OPTION_BUILD_TESTS AND NOT MINGW)
     set(IDE_FOLDER "Tests")

@@ -85,6 +85,12 @@ set(IDE_FOLDER "")
 # Declare project
 project(${META_PROJECT_NAME} VERSION ${META_VERSION} DESCRIPTION ${META_PROJECT_DESCRIPTION} LANGUAGES C CXX)
 
+# Emscripten only supports static linking; build the JS/wasm module by default
+if(EMSCRIPTEN)
+    set(BUILD_SHARED_LIBS OFF)
+endif()
+option(OPTION_BUILD_WASM      "Build JavaScript/WebAssembly bindings (requires Emscripten)." ${EMSCRIPTEN})
+
 # Set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -100,6 +106,12 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 #
 
 include(cmake/CompileOptions.cmake)
+
+# Emscripten has no OpenMP runtime; substitute a serial stub
+if(EMSCRIPTEN)
+    add_library(OpenMP::OpenMP_CXX INTERFACE IMPORTED GLOBAL)
+    target_include_directories(OpenMP::OpenMP_CXX INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/omp-stub)
+endif()
 
 
 #
